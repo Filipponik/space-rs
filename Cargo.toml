@@ -1,5 +1,5 @@
 [package]
-name = "space"
+name = "jb_space"
 repository = "https://github.com/Filipponik/space-rs"
 description = "Jetbrains Space API wrapper"
 version = "0.1.0"
