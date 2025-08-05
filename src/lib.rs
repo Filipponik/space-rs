@@ -1,4 +1,3 @@
-#![allow(dead_code)]
 mod deserializers;
 
 use std::collections::HashMap;
