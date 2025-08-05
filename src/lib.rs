@@ -193,7 +193,7 @@ impl Client {
 
             match response.next_start_from_date {
                 Some(date) => {
-                    actual_query.start_from_date = Some(date.iso.clone());
+                    actual_query.start_from_date = Some(date.iso);
                 }
                 None => {
                     break;
