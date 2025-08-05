@@ -1,0 +1,25 @@
+[package]
+name = "space"
+repository = "https://github.com/Filipponik/space-rs"
+description = "Jetbrains Space API wrapper"
+version = "0.1.0"
+edition = "2024"
+readme = "README.md"
+authors = ["Filipponik"]
+license = "MIT"
+categories = ["web-programming::http-client"]
+keywords = ["task", "issue", "task-management"]
+
+[lib]
+name = "space"
+path = "src/lib.rs"
+
+[dependencies]
+chrono = { version = "0.4.41", features = ["serde"] }
+clap = "4.5.41"
+dotenv = "0.15.0"
+reqwest = { version = "0.12.22", features = ["json"] }
+serde = { version = "1.0.219", features = ["derive"] }
+serde_json = "1.0.140"
+thiserror = "2.0.12"
+tokio = { version = "1.46.1", features = ["rt", "rt-multi-thread", "macros"] }
