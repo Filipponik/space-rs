@@ -12,10 +12,18 @@ pub struct Client {
     auth_token: String,
 }
 
+#[derive(Debug, thiserror::Error)]
+pub enum Error {
+    #[error("Request error: {0}")]
+    Request(reqwest::Error),
+    #[error("Response parse error: {0}")]
+    ResponseParse(reqwest::Error),
+}
+
 #[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct Member {
-    id: String,
-    username: String,
+    pub id: String,
+    pub username: String,
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
@@ -49,7 +57,7 @@ pub struct Message {
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
-pub struct IssuesApiResponse {
+struct IssuesApiResponse {
     data: Vec<Issue>,
 }
 
@@ -119,10 +127,10 @@ impl MessagesQuery {
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct Project {
-    id: String,
-    name: String,
+    pub id: String,
+    pub name: String,
     #[serde(deserialize_with = "deserializers::deserialize_project_key")]
-    key: String,
+    pub key: String,
 }
 
 #[derive(Serialize, Deserialize, Debug)]
@@ -139,26 +147,32 @@ impl Client {
         }
     }
 
-    pub async fn get_projects(&self) -> Vec<Project> {
+    pub async fn get_projects(&self) -> Result<Vec<Project>, Error> {
         let url = format!("{}/api/http/projects", self.base_url);
 
-        self.send_request::<_, ProjectsApiResponse>(&url, ())
-            .await
-            .data
+        Ok(self
+            .send_request::<_, ProjectsApiResponse>(&url, ())
+            .await?
+            .data)
     }
 
-    pub async fn get_issues_for_project(&self, query: IssuesQuery) -> Vec<Issue> {
+    pub async fn get_issues_for_project(&self, query: IssuesQuery) -> Result<Vec<Issue>, Error> {
         let url = format!(
             "{}/api/http/projects/id:{}/planning/issues",
             self.base_url, query.project_id
         );
 
-        self.send_request::<_, IssuesApiResponse>(&url, query)
-            .await
-            .data
+        Ok(self
+            .send_request::<_, IssuesApiResponse>(&url, query)
+            .await?
+            .data)
     }
 
-    pub async fn get_issue_for_project_by_number(&self, project_id: &str, number: u32) -> Issue {
+    pub async fn get_issue_for_project_by_number(
+        &self,
+        project_id: &str,
+        number: u32,
+    ) -> Result<Issue, Error> {
         let url = format!(
             "{}/api/http/projects/id:{project_id}/planning/issues/number:{number}",
             self.base_url
@@ -172,7 +186,7 @@ impl Client {
         self.send_request::<_, Issue>(&url, query).await
     }
 
-    pub async fn get_issue_messages(&self, query: MessagesQuery) -> Vec<Message> {
+    pub async fn get_issue_messages(&self, query: MessagesQuery) -> Result<Vec<Message>, Error> {
         let url = format!("{}/api/http/chats/messages", self.base_url);
 
         let mut actual_query = query.clone();
@@ -180,7 +194,7 @@ impl Client {
         loop {
             let response = self
                 .send_request::<_, MessagesApiResponse>(&url, actual_query.clone())
-                .await;
+                .await?;
 
             if response.messages.is_empty() {
                 break;
@@ -202,10 +216,14 @@ impl Client {
 
         let mut res = messages.into_values().collect::<Vec<Message>>();
         res.sort_by(|a, b| a.created_at.cmp(&b.created_at));
-        res
+        Ok(res)
     }
 
-    async fn send_request<TQuery, TResponse>(&self, url: &str, query: TQuery) -> TResponse
+    async fn send_request<TQuery, TResponse>(
+        &self,
+        url: &str,
+        query: TQuery,
+    ) -> Result<TResponse, Error>
     where
         TQuery: Serialize + Send,
         TResponse: for<'de> Deserialize<'de> + Send,
@@ -218,8 +236,8 @@ impl Client {
             .query(&query)
             .send()
             .await
-            .expect("Failed to send request");
+            .map_err(Error::Request)?;
 
-        result.json().await.expect("Failed to parse response")
+        Ok(result.json().await.map_err(Error::ResponseParse)?)
     }
 }
