@@ -238,6 +238,6 @@ impl Client {
             .await
             .map_err(Error::Request)?;
 
-        Ok(result.json().await.map_err(Error::ResponseParse)?)
+        result.json().await.map_err(Error::ResponseParse)
     }
 }
