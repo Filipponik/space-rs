@@ -1,0 +1,57 @@
+{
+  "next": "2",
+  "totalCount": 2,
+  "data": [
+    {
+      "id": "0198ad97-bb88-7c4b-bbe5-cc0a7878c08f",
+      "number": 1,
+      "createdBy": {
+        "name": "Tester Tester",
+        "details": {
+          "className": "CUserPrincipalDetails",
+          "user": {
+            "id": "0198ad98-1274-7980-a83a-8e6036fd17bb"
+          }
+        }
+      },
+      "assignee": null,
+      "status": {
+        "id": "0198ad98-74d8-715a-8a23-fb4c9e9bd30c",
+        "archived": false,
+        "name": "Open",
+        "resolved": false,
+        "color": "000000"
+      },
+      "title": "Test title for first issue",
+      "commentsCount": 0,
+      "description": "Test description for first issue"
+    },
+    {
+      "id": "0198ad98-74d8-75db-ae13-ba8265d5caa1",
+      "number": 2,
+      "createdBy": {
+        "name": "Maybe Project Manager",
+        "details": {
+          "className": "CUserPrincipalDetails",
+          "user": {
+            "id": "0198ad98-74d8-7a55-8921-486a7e9f4ac5"
+          }
+        }
+      },
+      "assignee": {
+        "id": "0198ad98-74d8-785e-941b-77f40b4ed03f",
+        "username": "Best Programmer"
+      },
+      "status": {
+        "id": "0198ad98-74d8-7506-946a-db5fc694f21c",
+        "archived": false,
+        "name": "Cancelled",
+        "resolved": true,
+        "color": "ffffff"
+      },
+      "title": "Test title for second issue",
+      "commentsCount": 1,
+      "description": "Test description for second issue"
+    }
+  ]
+}
