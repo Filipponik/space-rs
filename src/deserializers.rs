@@ -91,7 +91,7 @@ mod tests {
     use serde::Deserialize;
     use serde_json::json;
 
-    // Вспомогательные структуры для тестирования
+    // Helper structures for testing
     #[derive(Deserialize, Debug)]
     struct TestCreatedBy {
         #[serde(deserialize_with = "deserialize_created_by")]
@@ -146,7 +146,7 @@ mod tests {
     fn test_deserialize_created_by_missing_fields() {
         let json_data = json!({
             "name": "john_doe"
-            // отсутствует details
+            // missing details
         });
 
         let result: Result<TestCreatedBy, _> = serde_json::from_value(json!({
