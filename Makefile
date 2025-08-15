@@ -1,3 +1,6 @@
+coverage_flags = "-C instrument-coverage"
+coverage_path = "./target/debug/coverage"
+
 fix:
 	cargo fmt
 	cargo fix --allow-dirty --allow-staged
@@ -5,3 +8,11 @@ fix:
 
 test:
 	cargo test
+
+coverage:
+	rm -rf ./target/debug/coverage
+	RUSTFLAGS=${coverage_flags} cargo build
+	RUSTFLAGS=${coverage_flags} cargo test
+	grcov . -s . --binary-path ./target/debug/ -t html --branch --ignore-not-existing -o ${coverage_path}
+	cat ${coverage_path}/coverage.json | jq
+	rm -rf ./default_*.profraw
