@@ -13,6 +13,6 @@ coverage:
 	rm -rf ./target/debug/coverage
 	RUSTFLAGS=${coverage_flags} cargo build
 	RUSTFLAGS=${coverage_flags} cargo test
-	grcov . -s . --binary-path ./target/debug/ -t html --branch --ignore-not-existing -o ${coverage_path}
+	grcov . -s . --binary-path ./target/debug/ -t html --branch --ignore-not-existing -o ${coverage_path} --excl-line "#\[derive"
 	cat ${coverage_path}/coverage.json | jq
 	rm -rf ./default_*.profraw
