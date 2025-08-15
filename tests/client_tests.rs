@@ -26,7 +26,7 @@ async fn test_get_issue_for_project_by_number_success() {
         .match_header("Accept", "application/json")
         .with_status(200)
         .with_header("content-type", "application/json")
-        .with_body(serde_json::to_string(&load_fixture("issue_positive_response.json")).unwrap())
+        .with_body(load_fixture("issue_positive_response.json").to_string())
         .create_async()
         .await;
 
@@ -128,7 +128,7 @@ async fn test_get_projects_success() {
         .match_header("Accept", "application/json")
         .with_status(200)
         .with_header("content-type", "application/json")
-        .with_body(serde_json::to_string(&load_fixture("projects_positive_response.json")).unwrap())
+        .with_body(&load_fixture("projects_positive_response.json").to_string())
         .create_async()
         .await;
 
@@ -156,7 +156,7 @@ async fn test_get_issues_for_project_success() {
         .match_header("Accept", "application/json")
         .with_status(200)
         .with_header("content-type", "application/json")
-        .with_body(serde_json::to_string(&load_fixture("issues_positive_response.json")).unwrap())
+        .with_body(&load_fixture("issues_positive_response.json").to_string())
         .create_async()
         .await;
 
