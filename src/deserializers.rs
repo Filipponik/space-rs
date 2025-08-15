@@ -92,31 +92,31 @@ mod tests {
     use serde_json::json;
 
     // Helper structures for testing
-    #[derive(Deserialize, Debug)]
+    #[derive(Deserialize)]
     struct TestCreatedBy {
         #[serde(deserialize_with = "deserialize_created_by")]
         member: Member,
     }
 
-    #[derive(Deserialize, Debug)]
+    #[derive(Deserialize)]
     struct TestSpaceDate {
         #[serde(deserialize_with = "deserialize_space_date")]
         date: DateTime<Utc>,
     }
 
-    #[derive(Deserialize, Debug)]
+    #[derive(Deserialize)]
     struct TestAssignee {
         #[serde(deserialize_with = "deserialize_assignee", default)]
         assignee: Option<Member>,
     }
 
-    #[derive(Deserialize, Debug)]
+    #[derive(Deserialize)]
     struct TestStatus {
         #[serde(deserialize_with = "deserialize_status")]
         status: String,
     }
 
-    #[derive(Deserialize, Debug)]
+    #[derive(Deserialize)]
     struct TestProjectKey {
         #[serde(deserialize_with = "deserialize_project_key")]
         key: String,
@@ -154,8 +154,9 @@ mod tests {
         }));
 
         assert!(result.is_err());
-        let error = result.unwrap_err();
-        assert!(error.to_string().contains("missing field"));
+        if let Err(error) = result {
+            assert!(error.to_string().contains("missing field"));
+        };
     }
 
     #[test]
