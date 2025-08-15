@@ -1,5 +1,6 @@
-coverage_flags = "-C instrument-coverage"
-coverage_path = "./target/debug/coverage"
+coverage_rust_flags = -C instrument-coverage
+coverage_path = ./target/debug/coverage
+coverage_llvm_file = ${coverage_path}/profile/app-%p-%m.profraw
 
 fix:
 	cargo fmt
@@ -10,9 +11,10 @@ test:
 	cargo test
 
 coverage:
-	rm -rf ./target/debug/coverage
-	RUSTFLAGS=${coverage_flags} cargo build
-	RUSTFLAGS=${coverage_flags} cargo test
-	grcov . -s . --binary-path ./target/debug/ -t html --branch --ignore-not-existing -o ${coverage_path} --excl-line "#\[derive"
+	rm -rf ${coverage_path}
+	mkdir -p ${coverage_path}
+	RUSTFLAGS="${coverage_rust_flags}" LLVM_PROFILE_FILE="${coverage_llvm_file}" cargo build
+	RUSTFLAGS="${coverage_rust_flags}" LLVM_PROFILE_FILE="${coverage_llvm_file}" cargo test
+	LLVM_PROFILE_FILE="${coverage_llvm_file}" grcov . -s . --binary-path ./target/debug/ -t html --branch --ignore-not-existing -o ${coverage_path} --excl-line "#\[derive"
 	cat ${coverage_path}/coverage.json | jq
-	rm -rf ./default_*.profraw
+	rm -rf ${coverage_path}/profile/
