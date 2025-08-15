@@ -84,3 +84,169 @@ where
     let helper = Key::deserialize(deserializer)?;
     Ok(helper.key)
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use serde::Deserialize;
+    use serde_json::json;
+
+    // Вспомогательные структуры для тестирования
+    #[derive(Deserialize, Debug)]
+    struct TestCreatedBy {
+        #[serde(deserialize_with = "deserialize_created_by")]
+        member: Member,
+    }
+
+    #[derive(Deserialize, Debug)]
+    struct TestSpaceDate {
+        #[serde(deserialize_with = "deserialize_space_date")]
+        date: DateTime<Utc>,
+    }
+
+    #[derive(Deserialize, Debug)]
+    struct TestAssignee {
+        #[serde(deserialize_with = "deserialize_assignee", default)]
+        assignee: Option<Member>,
+    }
+
+    #[derive(Deserialize, Debug)]
+    struct TestStatus {
+        #[serde(deserialize_with = "deserialize_status")]
+        status: String,
+    }
+
+    #[derive(Deserialize, Debug)]
+    struct TestProjectKey {
+        #[serde(deserialize_with = "deserialize_project_key")]
+        key: String,
+    }
+
+    #[test]
+    fn test_deserialize_created_by_success() {
+        let json_data = json!({
+            "name": "john_doe",
+            "details": {
+                "user": {
+                    "id": "0198ad98-74d8-7eba-80a2-65f2e3fc2a9d"
+                }
+            }
+        });
+
+        let wrapper: TestCreatedBy = serde_json::from_value(json!({
+            "member": json_data
+        }))
+        .unwrap();
+
+        assert_eq!(wrapper.member.id, "0198ad98-74d8-7eba-80a2-65f2e3fc2a9d");
+        assert_eq!(wrapper.member.username, "john_doe");
+    }
+
+    #[test]
+    fn test_deserialize_created_by_missing_fields() {
+        let json_data = json!({
+            "name": "john_doe"
+            // отсутствует details
+        });
+
+        let result: Result<TestCreatedBy, _> = serde_json::from_value(json!({
+            "member": json_data
+        }));
+
+        assert!(result.is_err());
+        let error = result.unwrap_err();
+        assert!(error.to_string().contains("missing field"));
+    }
+
+    #[test]
+    fn test_deserialize_space_date_success() {
+        let json_data = json!({
+            "iso": "2030-10-25T10:30:00Z"
+        });
+
+        let wrapper: TestSpaceDate = serde_json::from_value(json!({
+            "date": json_data
+        }))
+        .unwrap();
+
+        let expected = DateTime::parse_from_rfc3339("2030-10-25T10:30:00Z")
+            .unwrap()
+            .with_timezone(&Utc);
+        assert_eq!(wrapper.date, expected);
+    }
+
+    #[test]
+    fn test_deserialize_assignee_some() {
+        let json_data = json!({
+            "id": "0198ad98-74d8-7d78-9d4f-518f01e36656",
+            "username": "jane_smith"
+        });
+
+        let wrapper: TestAssignee = serde_json::from_value(json!({
+            "assignee": json_data
+        }))
+        .unwrap();
+
+        let assignee = wrapper.assignee.unwrap();
+        assert_eq!(assignee.id, "0198ad98-74d8-7d78-9d4f-518f01e36656");
+        assert_eq!(assignee.username, "jane_smith");
+    }
+
+    #[test]
+    fn test_deserialize_assignee_none() {
+        let json_data = json!(null);
+
+        let wrapper: TestAssignee = serde_json::from_value(json!({
+            "assignee": json_data
+        }))
+        .unwrap();
+
+        assert!(wrapper.assignee.is_none());
+    }
+
+    #[test]
+    fn test_deserialize_status_success() {
+        let json_data = json!({
+            "name": "In Progress"
+        });
+
+        let wrapper: TestStatus = serde_json::from_value(json!({
+            "status": json_data
+        }))
+        .unwrap();
+
+        assert_eq!(wrapper.status, "In Progress");
+    }
+
+    #[test]
+    fn test_deserialize_project_key_success() {
+        let json_data = json!({
+            "key": "PROJ-123"
+        });
+
+        let wrapper: TestProjectKey = serde_json::from_value(json!({
+            "key": json_data
+        }))
+        .unwrap();
+
+        assert_eq!(wrapper.key, "PROJ-123");
+    }
+
+    #[test]
+    fn test_deserialize_assignee_extra_fields() {
+        let json_data = json!({
+            "id": "0198ad98-74d8-7a6a-8212-c78297ee1c35",
+            "username": "jane_smith",
+            "email": "jane@example.com"
+        });
+
+        let wrapper: TestAssignee = serde_json::from_value(json!({
+            "assignee": json_data
+        }))
+        .unwrap();
+
+        let assignee = wrapper.assignee.unwrap();
+        assert_eq!(assignee.id, "0198ad98-74d8-7a6a-8212-c78297ee1c35");
+        assert_eq!(assignee.username, "jane_smith");
+    }
+}
