@@ -16,5 +16,5 @@ coverage:
 	RUSTFLAGS="${coverage_rust_flags}" LLVM_PROFILE_FILE="${coverage_llvm_file}" cargo build
 	RUSTFLAGS="${coverage_rust_flags}" LLVM_PROFILE_FILE="${coverage_llvm_file}" cargo test
 	LLVM_PROFILE_FILE="${coverage_llvm_file}" grcov . -s . --binary-path ./target/debug/ -t html --branch --ignore-not-existing -o ${coverage_path} --excl-line "#\[derive"
-	cat ${coverage_path}/coverage.json | jq
+	cat ${coverage_path}/html/coverage.json | jq
 	rm -rf ${coverage_path}/profile/

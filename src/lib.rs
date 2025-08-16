@@ -200,6 +200,8 @@ impl Client {
                 break;
             }
 
+            let messages_more_than_batch_size = &response.messages.len() < &query.batch_size;
+
             response.messages.into_iter().for_each(|message| {
                 messages.insert(message.id.clone(), message);
             });
@@ -211,6 +213,10 @@ impl Client {
                 None => {
                     break;
                 }
+            };
+
+            if messages_more_than_batch_size {
+                break;
             }
         }
 
