@@ -40,6 +40,10 @@ async fn test_get_issue_for_project_by_number_success() {
         issue.description,
         Some("Test description for first issue".to_string())
     );
+    assert_eq!(
+        issue.created_at,
+        chrono::DateTime::parse_from_rfc3339("2025-10-22T08:36:50.657Z").unwrap()
+    );
 
     assert_eq!(issue.created_by.id, "0198ad98-1274-7980-a83a-8e6036fd17bb");
     assert_eq!(issue.created_by.username, "Tester Tester");
@@ -146,6 +150,10 @@ async fn test_get_issues_for_project_success() {
         found_issue1.description,
         Some("Test description for first issue".to_string())
     );
+    assert_eq!(
+        found_issue1.created_at,
+        chrono::DateTime::parse_from_rfc3339("2025-10-22T08:36:50.657Z").unwrap()
+    );
     assert_eq!(found_issue1.status, "Open");
     assert_eq!(found_issue1.number, 1);
     assert_eq!(
@@ -165,6 +173,10 @@ async fn test_get_issues_for_project_success() {
     assert_eq!(
         found_issue2.description,
         Some("Test description for second issue".to_string())
+    );
+    assert_eq!(
+        found_issue2.created_at,
+        chrono::DateTime::parse_from_rfc3339("2025-10-22T08:36:50.657Z").unwrap()
     );
     assert_eq!(found_issue2.status, "Cancelled");
     assert_eq!(found_issue2.number, 2);

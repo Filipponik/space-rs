@@ -41,6 +41,11 @@ pub struct Issue {
     #[serde(deserialize_with = "deserializers::deserialize_status")]
     pub status: String,
     pub description: Option<String>,
+    #[serde(
+        rename(deserialize = "creationTime"),
+        deserialize_with = "deserializers::deserialize_space_date"
+    )]
+    pub created_at: DateTime<Utc>,
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone)]

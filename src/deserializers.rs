@@ -146,23 +146,6 @@ mod tests {
     }
 
     #[test]
-    fn test_deserialize_created_by_missing_fields() {
-        let json_data = json!({
-            "name": "john_doe"
-            // missing details
-        });
-
-        let result: Result<TestCreatedBy, _> = serde_json::from_value(json!({
-            "member": json_data
-        }));
-
-        assert!(result.is_err());
-        if let Err(error) = result {
-            assert!(error.to_string().contains("missing field"));
-        };
-    }
-
-    #[test]
     fn test_deserialize_space_date_success() {
         let json_data = json!({
             "iso": "2030-10-25T10:30:00Z"

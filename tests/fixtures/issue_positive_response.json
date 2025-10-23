@@ -20,5 +20,9 @@
   },
   "title": "Test title for first issue",
   "commentsCount": 0,
-  "description": "Test description for first issue"
+  "description": "Test description for first issue",
+  "creationTime": {
+    "iso": "2025-10-22T08:36:50.657Z",
+    "timestamp": 1761122210657
+  }
 }

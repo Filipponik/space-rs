@@ -24,7 +24,11 @@
       },
       "title": "Test title for first issue",
       "commentsCount": 0,
-      "description": "Test description for first issue"
+      "description": "Test description for first issue",
+      "creationTime": {
+        "iso": "2025-10-22T08:36:50.657Z",
+        "timestamp": 1761122210657
+      }
     },
     {
       "id": "0198ad98-74d8-75db-ae13-ba8265d5caa1",
@@ -51,7 +55,11 @@
       },
       "title": "Test title for second issue",
       "commentsCount": 1,
-      "description": "Test description for second issue"
+      "description": "Test description for second issue",
+      "creationTime": {
+        "iso": "2025-10-22T08:36:50.657Z",
+        "timestamp": 1761122210657
+      }
     }
   ]
 }
