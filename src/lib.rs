@@ -93,7 +93,7 @@ impl IssuesQuery {
             project_id: project_id.to_string(),
             sorting: "CREATED".to_string(),
             descending: true,
-            top: 1000,
+            top: 100000,
             skip: 0,
             fields: "data(assignee(username,id),id,number,status,title,description,createdBy,commentsCount),next,totalCount".to_string(),
         }
