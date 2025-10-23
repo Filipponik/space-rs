@@ -9,7 +9,7 @@ where
     #[derive(Deserialize)]
     struct CreatedBy {
         name: String,
-        details: Details,
+        details: Option<Details>,
     }
 
     #[derive(Deserialize)]
@@ -24,7 +24,10 @@ where
 
     let helper = CreatedBy::deserialize(deserializer)?;
     Ok(Member {
-        id: helper.details.user.id,
+        id: helper
+            .details
+            .map(|details| details.user.id)
+            .unwrap_or_else(|| "deleted".to_string()),
         username: helper.name,
     })
 }
