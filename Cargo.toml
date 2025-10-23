@@ -2,7 +2,7 @@
 name = "jb_space"
 repository = "https://github.com/Filipponik/space-rs"
 description = "Jetbrains Space API wrapper"
-version = "0.1.4"
+version = "0.1.5"
 edition = "2024"
 readme = "README.md"
 authors = ["Filipponik"]
