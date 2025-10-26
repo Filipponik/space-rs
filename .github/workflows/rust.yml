@@ -1,4 +1,4 @@
-name: Rust
+name: Deploy
 
 on:
   push:
@@ -24,9 +24,6 @@ jobs:
           ~/.cargo/git/db/
           target/
         key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
-
-    - name: Cache check correct working
-      run: ls -lah && ls -lah target/ ** ls -lah target/debug
 
     - name: Checkout
       uses: actions/checkout@v4
