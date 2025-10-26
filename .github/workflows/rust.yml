@@ -15,6 +15,10 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+    - uses: actions/cache@v4.3.0
+      with:
+        path: target
+        key: target_cache
     - uses: actions/checkout@v4
     - name: Build
       run: cargo build --verbose
