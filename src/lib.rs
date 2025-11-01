@@ -100,7 +100,7 @@ impl IssuesQuery {
             descending: true,
             top: 100000,
             skip: 0,
-            fields: "data(assignee(username,id),id,number,status,title,description,createdBy,commentsCount),next,totalCount".to_string(),
+            fields: "data(assignee(username,id),id,number,status,title,description,createdBy,commentsCount,creationTime),next,totalCount".to_string(),
         }
     }
 }
@@ -185,7 +185,7 @@ impl Client {
 
         let query = HashMap::from([(
             "$fields",
-            "assignee(username,id),id,number,status,title,description,createdBy,commentsCount",
+            "assignee(username,id),id,number,status,title,description,createdBy,commentsCount,creationTime",
         )]);
 
         self.send_request::<_, Issue>(&url, query).await
